@@ -6,6 +6,8 @@ public class Entry
     public string _promptText;
     public string _entryText;
     public string _mood;
+    
+    public int _wordCount;
 
     public void Display()
     {
@@ -13,6 +15,7 @@ public class Entry
         Console.WriteLine($"Mood: {_mood}");
         Console.WriteLine($"Prompt: {_promptText}");
         Console.WriteLine($"Response: {_entryText}");
+        Console.WriteLine($"Word Count: {_wordCount}");
         Console.WriteLine();
     }
 }

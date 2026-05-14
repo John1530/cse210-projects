@@ -33,17 +33,18 @@ class Program
                 Console.Write("> ");
 
                 string response = Console.ReadLine();
+                int wordCount = response.Split(' ', StringSplitOptions.RemoveEmptyEntries).Length;
 
                 Console.Write("Mood: ");
                 string mood = Console.ReadLine();
 
                 Entry entry = new Entry();
 
-                entry._date = DateTime.Now.ToShortDateString();
+                entry._date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 entry._promptText = prompt;
                 entry._entryText = response;
                 entry._mood = mood;
-
+    
                 journal.AddEntry(entry);
             }
             else if (choice == 2)
