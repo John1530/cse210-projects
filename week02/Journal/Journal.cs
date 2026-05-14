@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 
 public class Journal
 {
     public List<Entry> _entries = new List<Entry>();
+
     public void AddEntry(Entry entry)
     {
         _entries.Add(entry);
@@ -17,44 +19,40 @@ public class Journal
             entry.Display();
         }
     }
-    public void SaveToFile(string file)
-{
-    using (StreamWriter outputFile = new StreamWriter(file))
-    {
-        foreach (Entry entry in _entries)
-        {
-            outputFile.WriteLine(
-                $"{entry._date}|{entry._promptText}|{entry._entryText}"
-            );
-        }
-    }
 
-}
+    public void SaveToFile(string file)
+    {
+        var options = new JsonSerializerOptions
+        {
+            IncludeFields = true,
+            WriteIndented = true
+        };
+
+        string jsonString = JsonSerializer.Serialize(_entries, options);
+
+        File.WriteAllText(file, jsonString);
+
+        Console.WriteLine("Journal saved successfully.");
+    }
 
     public void LoadFromFile(string file)
-{
-    if (File.Exists(file))
     {
-        string[] lines = File.ReadAllLines(file);
-
-        _entries.Clear();
-
-        foreach (string line in lines)
+        if (File.Exists(file))
         {
-            string[] parts = line.Split('|');
+            var options = new JsonSerializerOptions
+            {
+                IncludeFields = true
+            };
 
-            Entry entry = new Entry();
+            string jsonString = File.ReadAllText(file);
 
-            entry._date = parts[0];
-            entry._promptText = parts[1];
-            entry._entryText = parts[2];
+            _entries = JsonSerializer.Deserialize<List<Entry>>(jsonString, options);
 
-            _entries.Add(entry);
+            Console.WriteLine("Journal loaded successfully.");
+        }
+        else
+        {
+            Console.WriteLine("File not found.");
         }
     }
-    else
-    {
-        Console.WriteLine("File not found.");
-    }
-}
 }

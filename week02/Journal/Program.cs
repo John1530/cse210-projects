@@ -1,5 +1,8 @@
 using System;
 
+// Exceeded requirements by adding mood tracking
+// for each journal entry and implementing JSON
+// file storage instead of plain text storage.
 class Program
 {
     static void Main(string[] args)
@@ -24,19 +27,24 @@ class Program
 
             if (choice == 1)
             {
-                String promt = promptGenerator.GetRandomPrompt();
-                Console.WriteLine($"\nPrompt: {promt}");
+                string prompt = promptGenerator.GetRandomPrompt();
+
+                Console.WriteLine($"\nPrompt: {prompt}");
                 Console.Write("> ");
 
                 string response = Console.ReadLine();
 
-                Entry newEntry = new Entry();
+                Console.Write("Mood: ");
+                string mood = Console.ReadLine();
 
-                newEntry._date = DateTime.Now.ToShortDateString();
-                newEntry._promptText = promt;
-                newEntry._entryText = response;
-                journal.AddEntry(newEntry);
+                Entry entry = new Entry();
 
+                entry._date = DateTime.Now.ToShortDateString();
+                entry._promptText = prompt;
+                entry._entryText = response;
+                entry._mood = mood;
+
+                journal.AddEntry(entry);
             }
             else if (choice == 2)
             {
@@ -45,7 +53,7 @@ class Program
             }
             else if (choice == 3)
             {
-                Console.Write("Enter the filename to save: ");
+                Console.Write("Enter the filename to load: ");
                 string file = Console.ReadLine();
                 journal.LoadFromFile(file);
 
@@ -53,7 +61,7 @@ class Program
             }
             else if (choice == 4)
             {
-                Console.Write("Enter the filename to load: ");
+                Console.Write("Enter the filename to save: ");
                 string file = Console.ReadLine();
                 journal.SaveToFile(file);
 
