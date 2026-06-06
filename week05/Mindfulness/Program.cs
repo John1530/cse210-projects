@@ -1,5 +1,22 @@
 using System;
 
+/*
+ * Creativity and Exceeding Requirements:
+ *
+ * 1. Added a Gratitude Activity that encourages users
+ *    to focus on positive experiences and gratitude.
+ *
+ * 2. Added an Activity Statistics feature that tracks
+ *    how many times each activity has been completed.
+ *
+ * 3. Added an Activity Log that saves completed
+ *    activities to a text file named activitylog.txt.
+ *
+ * 4. Modified Reflection and Listing activities so
+ *    prompts/questions are not repeated until all
+ *    available prompts/questions have been used.
+ */
+
 class Program
 {
     static void Main(string[] args)
