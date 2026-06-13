@@ -37,6 +37,7 @@ public class GoalManager
 
     public void CreateGoal()
     {
+        Console.WriteLine("\nGoal Types:");
         Console.WriteLine("1. Simple Goal");
         Console.WriteLine("2. Eternal Goal");
         Console.WriteLine("3. Checklist Goal");
@@ -64,23 +65,32 @@ public class GoalManager
         else if (choice == 3)
         {
             Console.Write("Target Count: ");
-            int target = int.Parse(Console.ReadLine());
+            int targetCount = int.Parse(Console.ReadLine());
 
-            Console.Write("Bonus: ");
+            Console.Write("Bonus Points: ");
             int bonus = int.Parse(Console.ReadLine());
 
-            _goals.Add(new ChecklistGoal(
-                name,
-                description,
-                points,
-                target,
-                bonus));
+            _goals.Add(
+                new ChecklistGoal(
+                    name,
+                    description,
+                    points,
+                    targetCount,
+                    bonus));
         }
+
+        Console.WriteLine("Goal created successfully!");
     }
 
     public void ListGoals()
     {
         Console.WriteLine("\nGoals:");
+
+        if (_goals.Count == 0)
+        {
+            Console.WriteLine("No goals available.");
+            return;
+        }
 
         for (int i = 0; i < _goals.Count; i++)
         {
@@ -90,16 +100,24 @@ public class GoalManager
 
     public void RecordEvent()
     {
+        if (_goals.Count == 0)
+        {
+            Console.WriteLine("No goals available.");
+            return;
+        }
+
         ListGoals();
 
-        Console.Write("\nWhich goal did you complete? ");
+        Console.Write("\nWhich goal did you accomplish? ");
         int choice = int.Parse(Console.ReadLine());
 
-        int points = _goals[choice - 1].RecordEvent();
+        int pointsEarned = _goals[choice - 1].RecordEvent();
 
-        _score += points;
+        _score += pointsEarned;
 
-        Console.WriteLine($"You earned {points} points!");
+        Console.WriteLine($"\nYou earned {pointsEarned} points!");
+        Console.WriteLine($"Total Score: {_score}");
+
         int level = (_score / 1000) + 1;
         Console.WriteLine($"Current Level: {level}");
     }
@@ -118,12 +136,20 @@ public class GoalManager
                 output.WriteLine(goal.GetStringRepresentation());
             }
         }
+
+        Console.WriteLine("Goals saved successfully!");
     }
 
     public void LoadGoals()
     {
         Console.Write("Filename: ");
         string fileName = Console.ReadLine();
+
+        if (!File.Exists(fileName))
+        {
+            Console.WriteLine("File not found.");
+            return;
+        }
 
         string[] lines = File.ReadAllLines(fileName);
 
@@ -133,9 +159,38 @@ public class GoalManager
 
         for (int i = 1; i < lines.Length; i++)
         {
-            Console.WriteLine(lines[i]);
+            string[] parts = lines[i].Split('|');
+
+            if (parts[0] == "SimpleGoal")
+            {
+                _goals.Add(
+                    new SimpleGoal(
+                        parts[1],
+                        parts[2],
+                        int.Parse(parts[3]),
+                        bool.Parse(parts[4])));
+            }
+            else if (parts[0] == "EternalGoal")
+            {
+                _goals.Add(
+                    new EternalGoal(
+                        parts[1],
+                        parts[2],
+                        int.Parse(parts[3])));
+            }
+            else if (parts[0] == "ChecklistGoal")
+            {
+                _goals.Add(
+                    new ChecklistGoal(
+                        parts[1],
+                        parts[2],
+                        int.Parse(parts[3]),
+                        int.Parse(parts[5]),
+                        int.Parse(parts[4]),
+                        int.Parse(parts[6])));
+            }
         }
 
-        Console.WriteLine("Goals loaded.");
+        Console.WriteLine("Goals loaded successfully!");
     }
 }

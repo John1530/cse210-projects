@@ -13,16 +13,30 @@ public class ChecklistGoal : Goal
         _currentCount = 0;
     }
 
+    public ChecklistGoal(string name, string description, int points,
+        int targetCount, int bonus, int currentCount)
+        : base(name, description, points)
+    {
+        _targetCount = targetCount;
+        _bonus = bonus;
+        _currentCount = currentCount;
+    }
+
     public override int RecordEvent()
     {
-        _currentCount++;
-
-        if (_currentCount == _targetCount)
+        if (_currentCount < _targetCount)
         {
-            return _points + _bonus;
+            _currentCount++;
+
+            if (_currentCount == _targetCount)
+            {
+                return _points + _bonus;
+            }
+
+            return _points;
         }
 
-        return _points;
+        return 0;
     }
 
     public override bool IsComplete()
